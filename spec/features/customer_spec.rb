@@ -41,45 +41,21 @@ feature "Customer", type: :feature do
   end
 
   scenario "Shows a customer" do
-    customer = Customer.create!(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      smoker: ['S','N'].sample,
-      avatar:  "#{Rails.root}/spec/fixtures/avatar.png"
-    )
+    customer = create(:customer)
     visit(customer_path(customer.id))
     expect(page).to have_content(customer.name)
   end 
 
   scenario "Shows a customer page" do
-    customer1 = Customer.create!(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      smoker: ['S','N'].sample,
-      avatar:  "#{Rails.root}/spec/fixtures/avatar.png"
-    )
+    customer1 =  customer = create(:customer)
 
-    customer2 = Customer.create!(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      smoker: ['S','N'].sample,
-      avatar:  "#{Rails.root}/spec/fixtures/avatar.png"
-    )
+    customer2 =  customer = create(:customer)
     visit(customers_path)
     expect(page).to have_content(customer1.name).and have_content(customer2.name)
   end 
 
   scenario "updates a customer" do
-    customer = Customer.create!(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      smoker: ['S','N'].sample,
-      avatar:  "#{Rails.root}/spec/fixtures/avatar.png"
-    )
+    customer =  customer = create(:customer)
     new_name = Faker::Name.name
     visit(edit_customer_path(customer.id))
     fill_in('Nome', with: new_name)
@@ -87,7 +63,30 @@ feature "Customer", type: :feature do
 
     expect(page).to have_content("atualizado com sucesso")
     expect(page).to have_content(new_name)
-    
   end
 
+  scenario "click on Mostrar link" do
+    customer =  customer = create(:customer)
+
+    visit(customers_path)
+    click_on("Mostrar")
+    expect(page).to have_content("Listagem de Clientes")
+  end
+
+  scenario "click on Editar link" do
+    customer =  customer = create(:customer)
+
+    visit(customers_path)
+    click_on("Editar")
+    expect(page).to have_content("Edição de Clientes")
+  end
+
+  scenario "Delete a client" do
+    customer =  customer = create(:customer)
+
+    visit(customers_path)
+    click_on("Excluir")
+    expect(page).to have_content('Cliente excluido')
+
+  end
 end
